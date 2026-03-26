@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Plane, CircleDot, Jet } from "lucide-react";
+import { Plane, CircleDot } from "lucide-react";
 
 interface DetectionResult {
   aircraft: number;
