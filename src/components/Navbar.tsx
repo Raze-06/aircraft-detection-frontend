@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, Radar } from "lucide-react";
 
-const navItems = ["Home", "Features", "About", "Contact"];
+const navItems = ["Home", "Features", "About Model", "Contact"];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +24,7 @@ const Navbar = () => {
             <div className="absolute inset-0 animate-pulse-ring rounded-full border border-primary/30" />
           </div>
           <span className="font-display text-xl font-bold tracking-wider text-primary neon-text">
-            AeroVision AI
+            AeroVision
           </span>
         </motion.div>
 

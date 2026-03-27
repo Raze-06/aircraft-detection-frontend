@@ -2,11 +2,36 @@ import { motion } from "framer-motion";
 import { Target, Layers, Activity, Shield, Satellite } from "lucide-react";
 
 const advantages = [
-  { icon: Target, title: "High Accuracy Detection", description: "YOLOv8-powered detection with 99.2% precision across all aerial vehicle classes" },
-  { icon: Layers, title: "Multi-class Classification", description: "Simultaneous identification of aircraft, helicopters, and fighter jets" },
-  { icon: Activity, title: "Real-time Monitoring", description: "Sub-50ms inference enabling live airspace surveillance and tracking" },
-  { icon: Shield, title: "Defense Applications", description: "Scalable architecture designed for military and government intelligence" },
-  { icon: Satellite, title: "Satellite Compatible", description: "Process high-resolution satellite imagery from major Earth observation platforms" },
+  {
+    icon: Target,
+    title: "High Accuracy Detection",
+    description:
+      "YOLOv8-powered detection delivering 99.2% precision with robust performance across varied aerial environments and conditions",
+  },
+  {
+    icon: Layers,
+    title: "Multi-class Classification",
+    description:
+      "Simultaneous and reliable identification of aircraft, helicopters, and fighter jets within a single inference pipeline",
+  },
+  {
+    icon: Activity,
+    title: "Real-time Monitoring",
+    description:
+      "Sub-50ms inference enabling smooth real-time airspace surveillance, tracking, and rapid decision-making",
+  },
+  {
+    icon: Shield,
+    title: "Defense Applications",
+    description:
+      "Scalable and secure architecture tailored for military, defense systems, and government intelligence operations",
+  },
+  {
+    icon: Satellite,
+    title: "Satellite Compatible",
+    description:
+      "Supports processing of high-resolution satellite imagery from leading Earth observation platforms with consistent accuracy",
+  },
 ];
 
 const AdvantagesSection = () => {
@@ -38,14 +63,21 @@ const AdvantagesSection = () => {
           {[...advantages, ...advantages].map((adv, i) => (
             <motion.div
               key={i}
-              whileHover={{ scale: 1.05, boxShadow: "0 0 30px hsl(180 100% 50% / 0.15)" }}
-              className="glass rounded-2xl p-6 min-w-[300px] flex-shrink-0 hover:border-primary/40 transition-all duration-300"
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 30px hsl(180 100% 50% / 0.15)",
+              }}
+              className="glass rounded-2xl p-6 w-[300px] flex-shrink-0 hover:border-primary/40 transition-all duration-300"
             >
               <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mb-4">
                 <adv.icon className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="font-display text-base font-semibold text-foreground mb-2">{adv.title}</h3>
-              <p className="font-body text-sm text-muted-foreground leading-relaxed">{adv.description}</p>
+              <h3 className="font-display text-base font-semibold text-foreground mb-2">
+                {adv.title}
+              </h3>
+              <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                {adv.description}
+              </p>
             </motion.div>
           ))}
         </motion.div>

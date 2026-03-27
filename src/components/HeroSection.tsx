@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
 import RadarDisplay from "./RadarDisplay";
+import FighterBackground from "./FighterBackground";
+import jetLeft from "@/assets/jet3-left.png";
+import jetRight from "@/assets/jet2-right.png";
 
 const HeroSection = () => {
   const scrollToFeatures = () => {
@@ -15,8 +18,11 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background z-10 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80 z-10 pointer-events-none" />
 
+      {/* Fighter jet backgrounds */}
+      <FighterBackground leftImage={jetLeft} rightImage={jetRight} />
+
       {/* Radar background */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-20">
+      <div className="absolute inset-0 flex items-center justify-center opacity-60">
         <RadarDisplay size={700} />
       </div>
 
@@ -43,7 +49,7 @@ const HeroSection = () => {
           <span className="text-foreground">AI-Powered </span>
           <span className="text-primary neon-text">Aircraft Detection</span>
           <br />
-          <span className="text-foreground">& Intelligence System</span>
+          <span className="text-foreground">& Monitoring System</span>
         </motion.h1>
 
         <motion.p

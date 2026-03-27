@@ -10,13 +10,30 @@ interface DetectionResult {
 
 interface ResultsSectionProps {
   results: DetectionResult | null;
+  originalImage: string | null;
+  outputImage: string | null;
+  outputVideo: string | null;
+  mode: "image" | "video";
 }
 
-const AnimatedCounter = ({ target, label, icon: Icon, color }: { target: number; label: string; icon: any; color: string }) => {
+const AnimatedCounter = ({
+  target,
+  label,
+  icon: Icon,
+  color,
+}: {
+  target: number;
+  label: string;
+  icon: any;
+  color: string;
+}) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (target === 0) { setCount(0); return; }
+    if (target === 0) {
+      setCount(0);
+      return;
+    }
     let start = 0;
     const duration = 1500;
     const step = Math.ceil(target / (duration / 30));
@@ -38,7 +55,9 @@ const AnimatedCounter = ({ target, label, icon: Icon, color }: { target: number;
       animate={{ opacity: 1, scale: 1 }}
       className="glass rounded-xl p-6 text-center flex flex-col items-center gap-3 hover:border-primary/40 transition-colors"
     >
-      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${color}`}>
+      <div
+        className={`w-12 h-12 rounded-full flex items-center justify-center ${color}`}
+      >
         <Icon className="w-6 h-6" />
       </div>
       <motion.span
@@ -49,12 +68,20 @@ const AnimatedCounter = ({ target, label, icon: Icon, color }: { target: number;
       >
         {count}
       </motion.span>
-      <span className="font-mono text-xs tracking-widest uppercase text-muted-foreground">{label}</span>
+      <span className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+        {label}
+      </span>
     </motion.div>
   );
 };
 
-const ResultsSection = ({ results }: ResultsSectionProps) => {
+const ResultsSection = ({
+  results,
+  originalImage,
+  outputImage,
+  outputVideo,
+  mode,
+}: ResultsSectionProps) => {
   if (!results) return null;
 
   return (
@@ -68,7 +95,9 @@ const ResultsSection = ({ results }: ResultsSectionProps) => {
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
             Detection <span className="text-primary neon-text">Results</span>
           </h2>
-          <p className="font-body text-muted-foreground">AI analysis complete — classified targets identified</p>
+          <p className="font-body text-muted-foreground">
+            AI analysis complete — classified targets identified
+          </p>
         </div>
 
         {/* Summary Cards */}
@@ -96,15 +125,60 @@ const ResultsSection = ({ results }: ResultsSectionProps) => {
         {/* Detection visualization placeholder */}
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           <div className="glass rounded-xl p-4">
-            <div className="font-mono text-xs text-muted-foreground mb-2 tracking-widest uppercase">Original Input</div>
-            <div className="aspect-video bg-muted/30 rounded-lg flex items-center justify-center border border-border">
-              <span className="font-mono text-sm text-muted-foreground">Source imagery</span>
+            <div className="font-mono text-xs text-muted-foreground mb-2 tracking-widest uppercase">
+              Original Input
+            </div>
+            <div className="aspect-video bg-muted/30 rounded-lg flex items-center justify-center border border-border overflow-hidden">
+              {mode === "image" ? (
+                originalImage ? (
+                  <img
+                    src={originalImage}
+                    alt="Original"
+                    className="w-full h-full object-contain rounded-lg"
+                  />
+                ) : (
+                  <span className="font-mono text-sm text-muted-foreground">
+                    No image
+                  </span>
+                )
+              ) : originalImage ? (
+                <video
+                  src={originalImage}
+                  controls
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              ) : (
+                <span className="font-mono text-sm text-muted-foreground">
+                  No video
+                </span>
+              )}
             </div>
           </div>
           <div className="glass rounded-xl p-4 border-primary/20">
-            <div className="font-mono text-xs text-primary mb-2 tracking-widest uppercase">Detected Output</div>
-            <div className="aspect-video bg-primary/5 rounded-lg flex items-center justify-center border border-primary/20 neon-glow">
-              <span className="font-mono text-sm text-primary">Annotated detections</span>
+            <div className="font-mono text-xs text-primary mb-2 tracking-widest uppercase">
+              Detected Output
+            </div>
+            <div className="aspect-video bg-primary/5 rounded-lg flex items-center justify-center border border-primary/20 neon-glow overflow-hidden">
+              {mode === "image" ? (
+                outputImage ? (
+                  <img
+                    src={outputImage}
+                    alt="Detected"
+                    className="w-full h-full object-contain rounded-lg"
+                  />
+                ) : (
+                  <span>No output</span>
+                )
+              ) : outputVideo ? (
+                <video
+                  key={outputVideo}
+                  src={outputVideo}
+                  controls
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              ) : (
+                <span>Processing video...</span>
+              )}
             </div>
           </div>
         </div>

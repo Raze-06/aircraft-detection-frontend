@@ -7,6 +7,7 @@ interface InputCardsProps {
 }
 
 const airbases = [
+  {name: "Mumbai International Airport", coords: "19°05′19″N, 72°52′05″E"},
   { name: "Edwards AFB", coords: "34.9054°N, 117.8837°W" },
   { name: "Nellis AFB", coords: "36.2360°N, 115.0341°W" },
   { name: "Langley AFB", coords: "37.0832°N, 76.3604°W" },

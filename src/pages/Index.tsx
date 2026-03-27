@@ -14,36 +14,89 @@ interface DetectionResult {
   fighter_jets: number;
 }
 
+// ✅ USE ENV VARIABLE (IMPORTANT FOR DEPLOYMENT)
+const API = import.meta.env.VITE_API_URL;
+
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<DetectionResult | null>(null);
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [outputImage, setOutputImage] = useState<string | null>(null);
+  const [mode, setMode] = useState<"image" | "video">("image");
+  const [outputVideo, setOutputVideo] = useState<string | null>(null);
 
-  const handleDetect = (mode: string, file?: File) => {
+  const handleDetect = async (mode: string, file?: File) => {
+    if (!file) {
+      toast.error("Please upload a file first");
+      return;
+    }
+
     setIsLoading(true);
     setResults(null);
+    setMode(mode as "image" | "video");
+
+    // Preview (image or video)
+    setOriginalImage(URL.createObjectURL(file));
 
     toast.info("Detection initiated", {
       description: `Processing ${mode} input...`,
     });
 
-    // Simulate AI detection (mock backend)
-    setTimeout(() => {
-      const mockResults: DetectionResult = {
-        aircraft: Math.floor(Math.random() * 12) + 3,
-        helicopters: Math.floor(Math.random() * 8) + 1,
-        fighter_jets: Math.floor(Math.random() * 6) + 1,
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // ✅ USE DEPLOYED BACKEND URL
+      const url =
+        mode === "video"
+          ? `${API}/predict-video`
+          : `${API}/predict-image`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Server error");
+      }
+
+      const data = await response.json();
+
+      const realResults: DetectionResult = {
+        aircraft: data.aircraft,
+        helicopters: data.helicopters,
+        fighter_jets: data.fighter_jets,
       };
-      setResults(mockResults);
-      setIsLoading(false);
+
+      setResults(realResults);
+
+      // ✅ HANDLE IMAGE / VIDEO OUTPUT
+      if (mode === "image" && data.output_image) {
+        setOutputImage(`data:image/jpeg;base64,${data.output_image}`);
+        setOutputVideo(null);
+      } else if (mode === "video" && data.video_url) {
+        setOutputVideo(data.video_url);
+        setOutputImage(null);
+      }
 
       toast.success("Detection complete", {
-        description: `Found ${mockResults.aircraft + mockResults.helicopters + mockResults.fighter_jets} targets`,
+        description: `Found ${
+          data.aircraft + data.helicopters + data.fighter_jets
+        } targets`,
       });
 
       setTimeout(() => {
-        document.getElementById("results")?.scrollIntoView({ behavior: "smooth" });
+        document
+          .getElementById("results")
+          ?.scrollIntoView({ behavior: "smooth" });
       }, 200);
-    }, 4200);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error connecting to backend");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -51,9 +104,17 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <InputCards onDetect={handleDetect} />
+
       <div id="results">
-        <ResultsSection results={results} />
+        <ResultsSection
+          results={results}
+          originalImage={originalImage}
+          outputImage={outputImage}
+          mode={mode}
+          outputVideo={outputVideo}
+        />
       </div>
+
       <AdvantagesSection />
       <Footer />
       <LoadingOverlay isVisible={isLoading} />
